@@ -1,4 +1,4 @@
-package br.com.futdodia;
+package br.com.appfutebol;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
