@@ -13,18 +13,18 @@ public class OpenApiConfig {
   public OpenAPI openAPI() {
     return new OpenAPI()
       .info(new Info()
-        .title("")
+        .title("App Futebol")
         .version("v0.0.1")
-        .description("")
-        .termsOfService("")
+        .description("API que visa sortear times de futebol de forma equilibrada!")
+        .termsOfService("termsOfService")
         .contact(contact()));
   }
 
   private Contact contact() {
     Contact contact = new Contact();
-    contact.setEmail("");
-    contact.setName("");
-    contact.setUrl("");
+    contact.setEmail("omnimobile57@gmail.com");
+    contact.setName("OmniMobile");
+    contact.setUrl("url");
     return contact;
   }
 }
