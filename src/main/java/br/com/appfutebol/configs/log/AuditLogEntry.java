@@ -23,8 +23,8 @@ public class AuditLogEntry {
     }
     public String logMessage(Throwable ex){
         String message = String.format("""
-          An event occurred on Class %s= Action: %s, timestamp: %s, Method: %s, Result: %s, cause: %s
-          """, this.currentClass,this.action,this.dateTime, this.methodName, this.result, ex.getCause().getMessage());
+          An event occurred on Class %s= Action: %s, timestamp: %s, Method: %s, Result: %s, errorMessage: %s
+          """, this.currentClass,this.action,this.dateTime, this.methodName, this.result, ex.getMessage());
         return message;
     }
 }

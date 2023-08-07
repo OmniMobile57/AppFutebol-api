@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class GamesPlayed {
 
-  private int victories;
-  private int draw;
-  private int defeat;
-  private int goals;
+  private int victories = 0;
+  private int draw = 0;
+  private int defeat = 0;
+  private int goals = 0;
 
 }

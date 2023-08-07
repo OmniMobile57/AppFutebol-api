@@ -51,7 +51,7 @@ public class AuditLogAspect {
 
   private Email buildEmail(String text) {
 
-    return new Email(emailTo, text, "Um erro ocorreu na aplicação FutDoDia!");
+    return new Email(emailTo, text, "Um erro ocorreu na aplicação App Futebol!");
   }
 }
     
