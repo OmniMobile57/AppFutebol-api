@@ -81,8 +81,20 @@ public class FootySpaceServiceIMP implements FootySpaceService {
     FootySpace footySpace = footySpaceRepository.findById(footySpaceId)
       .orElseThrow(() -> new ResourceNotFoundException("No such FootySpace"));
     personRepository.findById(ownerId).ifPresentOrElse(person -> {
-      boolean isOwner = person.getFootySpace().stream()
-        .anyMatch(personFootySpace -> personFootySpace.equals(footySpace));
+//      List<Players> footySpaceOwner = footySpace.getPlayer();
+
+      List<Players> ownersList = person.getPlayer().stream()
+        .filter(player -> player.getResponsibility().equals(OWNER)).collect(
+          Collectors.toList());
+
+      // Lista de jogadores dono do grupo
+      List<Players> footySpaceOwner = footySpace.getPlayer().stream()
+        .filter(player -> player.getResponsibility()
+          .equals(OWNER)).collect(Collectors.toList()).stream().toList();
+
+      // vendo se algum jogador dono do usuário é o mesmo que o jogador dono do grupo
+      boolean isOwner = ownersList.stream().anyMatch(player -> footySpaceOwner.contains(player));
+
       if (isOwner) {
         footySpaceRepository.deleteById(footySpaceId);
       } else {
@@ -107,7 +119,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
         .anyMatch(p -> p.getResponsibility().equals(Responsibility.ADM));
       if (anyADMExists) {
         giveOwnerToAnyADMPlayerInTheFootySpace(footySpace);
-        leaveFootySpace(footySpace, person,player);
+        leaveFootySpace(footySpace, person, player);
 
       } else {
         giveOwnerToAnyPlayerInTheFootySpace(footySpace);
@@ -115,7 +127,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
       }
       return;
     }
-    leaveFootySpace(footySpace, person,player);
+    leaveFootySpace(footySpace, person, player);
 
   }
 
@@ -137,7 +149,8 @@ public class FootySpaceServiceIMP implements FootySpaceService {
   }
 
   private void leaveFootySpace(FootySpace footySpace, Person person, Players player) {
-    List<Players> playersList = footySpace.getPlayer().stream().filter(p -> !p.getId().equals(player.getId()))
+    List<Players> playersList = footySpace.getPlayer().stream()
+      .filter(p -> !p.getId().equals(player.getId()))
       .collect(Collectors.toList());
     List<FootySpace> footySpaceList = person.getFootySpace().stream()
       .filter(fs -> !fs.getName().equals(footySpace.getName())).collect(Collectors.toList());
@@ -153,7 +166,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
     List<Players> playersList = footySpace.getPlayer();
 
     int index = (int) Math.random() * (playersList.size() - 1);
-    if(index > 0){
+    if (index > 0) {
       Players player = playersList.get(index);
       player.setResponsibility(OWNER);
       playerRepository.save(player);
@@ -164,7 +177,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
     List<Players> playersList = footySpace.getPlayer().stream()
       .filter(player -> player.getResponsibility().equals(ADM)).collect(Collectors.toList());
     int index = (int) Math.random() * (playersList.size() - 1);
-    if (index > 0){
+    if (index > 0) {
       Players player = playersList.get(index);
       player.setResponsibility(OWNER);
       playerRepository.save(player);

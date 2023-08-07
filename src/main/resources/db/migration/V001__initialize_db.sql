@@ -12,8 +12,7 @@ CREATE TABLE `footy_space`
     `person_id`    char(36)     DEFAULT NULL,
     `name`         varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY            `FKcsgg4w0xv1jpk26rcwx0bxkff` (`person_id`),
-    CONSTRAINT `FKcsgg4w0xv1jpk26rcwx0bxkff` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`)
+    KEY `FKcsgg4w0xv1jpk26rcwx0bxkff` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `players`
@@ -30,8 +29,6 @@ CREATE TABLE `players`
     `name`           varchar(255) DEFAULT NULL,
     `responsibility` enum('ADM','COMMON','OWNER') DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY              `FKckbnhfjy5dqb6wy9wjv1852m2` (`footy_space_id`),
-    KEY              `FK5j5g0np9w36bcpjfe6lo5hmxa` (`person_id`),
-    CONSTRAINT `FK5j5g0np9w36bcpjfe6lo5hmxa` FOREIGN KEY (`person_id`) REFERENCES `person` (`id`),
-    CONSTRAINT `FKckbnhfjy5dqb6wy9wjv1852m2` FOREIGN KEY (`footy_space_id`) REFERENCES `footy_space` (`id`)
+    KEY `FKckbnhfjy5dqb6wy9wjv1852m2` (`footy_space_id`),
+    KEY `FK5j5g0np9w36bcpjfe6lo5hmxa` (`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
