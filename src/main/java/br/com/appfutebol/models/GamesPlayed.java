@@ -1,5 +1,6 @@
 package br.com.appfutebol.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
@@ -7,10 +8,15 @@ import lombok.Data;
 @Data
 public class GamesPlayed {
 
+  @Schema(example = "0")
   private int games = 0;
+  @Schema(example = "0")
   private int victories = 0;
+  @Schema(example = "0")
   private int draw = 0;
+  @Schema(example = "0")
   private int defeat = 0;
+  @Schema(example = "0")
   private int goals = 0;
 
 
