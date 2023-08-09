@@ -5,6 +5,7 @@ import br.com.appfutebol.models.GamesPlayed;
 import br.com.appfutebol.models.Person;
 import br.com.appfutebol.models.Responsibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +20,6 @@ public class PlayersRequest {
 
   private String name;
   private Responsibility responsibility = Responsibility.COMMON;
-
-
-
-
-
+  @JsonProperty("games_played")
+  private GamesPlayed gamesPlayed = new GamesPlayed();
 }

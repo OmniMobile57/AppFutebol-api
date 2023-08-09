@@ -24,4 +24,6 @@ public class Matches extends AbstractModel {
 
   @Embedded
   private MatchResult matchResult;
+
+
 }

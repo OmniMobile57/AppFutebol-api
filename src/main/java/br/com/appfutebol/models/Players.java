@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import java.text.DecimalFormat;
 import java.util.UUID;
 import lombok.Data;
 
@@ -32,5 +33,18 @@ public class Players extends AbstractModel {
   @ManyToOne
   private Person person;
 
+  public void setScore() {
+    double maxPointsActual = this.score * this.gamesPlayed.getGames();
+    double victoryScore = this.gamesPlayed.getVictories();
+    double drawScore = this.gamesPlayed.getDraw();
+    double goalScore = this.gamesPlayed.getGoals();
+
+    double newMaxPoints = maxPointsActual + victoryScore + drawScore + goalScore;
+    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+
+    double newScore = Double.valueOf(decimalFormat.format(newMaxPoints / this.gamesPlayed.getGames()));
+    this.setScore(newScore);
+
+  }
 
 }
