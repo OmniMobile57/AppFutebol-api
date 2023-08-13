@@ -2,6 +2,7 @@ package br.com.appfutebol.api.responses;
 
 import br.com.appfutebol.models.AbstractModel;
 import br.com.appfutebol.models.Players;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,7 @@ import lombok.Data;
 @Data
 public class TeamsResponse {
 
+  @Schema(example = "a6f58889-8217-45dd-9cfc-507401b40442")
   private UUID id;
   private List<PlayersResponse> player;
 

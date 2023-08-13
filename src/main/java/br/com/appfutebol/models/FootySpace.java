@@ -30,6 +30,7 @@ public class FootySpace extends AbstractModel {
   private Person person;
 
   public void addPlayer(Players player) {
+    player.setFootySpace(this);
     this.player.add(player);
   }
 

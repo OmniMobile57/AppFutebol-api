@@ -19,6 +19,7 @@ import br.com.appfutebol.repositories.PlayersRepository;
 import br.com.appfutebol.services.FootySpaceService;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -65,7 +66,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
     Person person = new Person();
     Players player = new Players();
     player.setResponsibility(OWNER);
-    player.setName(UUID.randomUUID().toString());
+    player.setName(footySpaceRequest.getPlayerName());
     FootySpace footySpaceEntity = mapper.toFootySpaceEntity(footySpaceRequest);
     footySpaceEntity.addPlayer(player);
     person.addFootySpace(footySpaceEntity);
@@ -81,19 +82,20 @@ public class FootySpaceServiceIMP implements FootySpaceService {
     FootySpace footySpace = footySpaceRepository.findById(footySpaceId)
       .orElseThrow(() -> new ResourceNotFoundException("No such FootySpace"));
     personRepository.findById(ownerId).ifPresentOrElse(person -> {
-//      List<Players> footySpaceOwner = footySpace.getPlayer();
 
+      // jogadores do usuário que tem a responsabilidade de dono
       List<Players> ownersList = person.getPlayer().stream()
         .filter(player -> player.getResponsibility().equals(OWNER)).collect(
           Collectors.toList());
 
       // Lista de jogadores dono do grupo
-      List<Players> footySpaceOwner = footySpace.getPlayer().stream()
+      Optional<Players> footySpaceOwner = footySpace.getPlayer().stream()
         .filter(player -> player.getResponsibility()
-          .equals(OWNER)).collect(Collectors.toList()).stream().toList();
+          .equals(OWNER)).collect(Collectors.toList()).stream().findFirst();
 
       // vendo se algum jogador dono do usuário é o mesmo que o jogador dono do grupo
-      boolean isOwner = ownersList.stream().anyMatch(player -> footySpaceOwner.contains(player));
+      boolean isOwner = footySpaceOwner.isPresent() ? ownersList.stream()
+        .anyMatch(player -> footySpaceOwner.get().equals(player)) : false;
 
       if (isOwner) {
         footySpaceRepository.deleteById(footySpaceId);
