@@ -17,6 +17,6 @@ public class TeamsResponse {
 
   @Schema(example = "a6f58889-8217-45dd-9cfc-507401b40442")
   private UUID id;
-  private List<PlayersResponse> player;
+  private List<PlayersToDrawResponse> player;
 
 }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class FootySpaceController {
   )
   @PostMapping
   public ResponseEntity<FootySpaceResponse> save(
-    @RequestBody FootySpaceRequest footySpaceRequest,
+    @RequestBody @Valid FootySpaceRequest footySpaceRequest,
     @RequestParam(required = false) UUID footySpaceId,
     @RequestParam(required = false) UUID personId) {
     return ResponseEntity.status(CREATED)

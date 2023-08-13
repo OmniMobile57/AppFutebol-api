@@ -7,7 +7,10 @@ import java.util.UUID;
 
 public interface PlayersService {
 
-  PlayersResponse save(PlayersRequest playersRequest, UUID footySpaceId, UUID playerId, UUID personId);
+  PlayersResponse save(PlayersRequest playersRequest, UUID footySpaceId, UUID playerId,
+    UUID personId);
+
+  List<PlayersResponse> saveGamesPlayed(List<PlayersRequest> playersRequests);
 
   void deletePlayer(UUID playerID);
 

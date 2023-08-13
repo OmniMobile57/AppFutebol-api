@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +47,29 @@ public class PlayersController {
     }
   )
   @PostMapping("/{footySpaceId}")
-  public ResponseEntity<PlayersResponse> save(@RequestBody PlayersRequest playerRequest,
+  public ResponseEntity<PlayersResponse> save(
+    @RequestBody @Valid PlayersRequest playerRequest,
     @PathVariable UUID footySpaceId,
     @RequestParam(required = false) UUID playerId,
     @RequestParam(required = false) UUID personId) {
     return ResponseEntity.status(CREATED)
       .body(playersService.save(playerRequest, footySpaceId, playerId, personId));
+  }
+
+  @Operation(
+    summary = "Save New Games Played", description = "Save new games played", tags = {
+    "Player"},
+    responses = {
+      @ApiResponse(responseCode = "200", content = @Content(mediaType = APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = PlayersResponse.class))), description = "OK"),
+      @ApiResponse(responseCode = "404", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = ExceptionResponse.class)), description = "Not Found"),
+      @ApiResponse(responseCode = "500", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = ExceptionResponse.class)), description = "Internal Server Error")
+    }
+  )
+  @PostMapping
+  public ResponseEntity<List<PlayersResponse>> saveGamesPlayed(
+    @RequestBody @Valid List<PlayersRequest> playerRequest) {
+    return ResponseEntity.status(OK)
+      .body(playersService.saveGamesPlayed(playerRequest));
   }
 
   @Operation(

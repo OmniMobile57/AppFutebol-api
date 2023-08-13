@@ -10,8 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.text.DecimalFormat;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 public class Players extends AbstractModel {
@@ -42,7 +48,7 @@ public class Players extends AbstractModel {
     double newMaxPoints = maxPointsActual + victoryScore + drawScore + goalScore;
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
-    double newScore = Double.valueOf(decimalFormat.format(newMaxPoints / this.gamesPlayed.getGames()));
+    double newScore = Double.valueOf(decimalFormat.format(newMaxPoints / this.gamesPlayed.getGames()).replace(",", "."));
     this.setScore(newScore);
 
   }
