@@ -1,5 +1,5 @@
 package br.com.appfutebol.models;
 
 public enum Responsibility {
-  OWNER, ADM, COMMON
+  OWNER, ADM, COMMON, GUEST
 }

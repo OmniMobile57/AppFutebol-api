@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
@@ -17,9 +18,11 @@ import lombok.Data;
 public class FootySpaceRequest {
 
   @Schema(example = "Futebol das 20h")
+  @NotBlank(message = "Name is required")
   private String name;
   @Schema(example = "John Doe")
   @JsonProperty("player_name")
+  @NotBlank(message = "player name is required")
   private String playerName;
 
 }
