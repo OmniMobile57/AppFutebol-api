@@ -1,0 +1,1 @@
+ALTER TABLE players MODIFY COLUMN responsibility ENUM('ADM', 'COMMON', 'OWNER', 'GUEST') DEFAULT 'GUEST';

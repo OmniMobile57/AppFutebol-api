@@ -1,7 +1,6 @@
 package br.com.appfutebol.services.imp;
 
 import br.com.appfutebol.api.requests.PlayersToDrawRequest;
-import br.com.appfutebol.api.responses.PlayersToDrawResponse;
 import br.com.appfutebol.api.responses.TeamsResponse;
 import br.com.appfutebol.configs.log.AuditLog;
 import br.com.appfutebol.exceptions.NotEnoughPlayersException;
@@ -9,15 +8,12 @@ import br.com.appfutebol.exceptions.ResourceNotFoundException;
 import br.com.appfutebol.mappers.AppMapper;
 import br.com.appfutebol.models.Players;
 import br.com.appfutebol.models.Teams;
-import br.com.appfutebol.repositories.FootySpaceRepository;
 import br.com.appfutebol.repositories.PlayersRepository;
-import br.com.appfutebol.repositories.TeamsRepository;
 import br.com.appfutebol.services.TeamsService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +21,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamsServiceIMP implements TeamsService {
 
-//  private final TeamsRepository teamsRepository;
-//  private final FootySpaceRepository footySpaceRepository;
   private final PlayersRepository playersRepository;
   private final AppMapper mapper = new AppMapper();
 
@@ -68,9 +62,10 @@ public class TeamsServiceIMP implements TeamsService {
 
   private List<Players> verifyPlayersToDrawRequest(List<PlayersToDrawRequest> playersToDrawRequests,
     int amountOfTeams) {
-    if (playersToDrawRequests.size() % amountOfTeams < 0) {
+    int amountOfPlayers = playersToDrawRequests.size();
+    if (amountOfTeams == 2 && amountOfPlayers % amountOfTeams != 0) {
       int requiredPlayers =
-        playersToDrawRequests.size() + Math.abs((int) playersToDrawRequests.size() % amountOfTeams);
+        amountOfPlayers + Math.abs((int) amountOfPlayers % amountOfTeams);
       throw new NotEnoughPlayersException(
         "Not enough players, the minimum required to %s groups is %s", amountOfTeams,
         requiredPlayers);
