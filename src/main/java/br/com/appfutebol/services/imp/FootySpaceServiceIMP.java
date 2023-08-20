@@ -39,6 +39,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
   @Override
   public FootySpaceResponse save(FootySpaceRequest footySpaceRequest, UUID footySpaceId,
     UUID personId) {
+
     if (Objects.nonNull(footySpaceId)) {
       AtomicReference<FootySpace> updatedFootySpace = new AtomicReference<>();
       footySpaceRepository.findById(footySpaceId).ifPresentOrElse(footySpace -> {
@@ -91,7 +92,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
       // Lista de jogadores dono do grupo
       Optional<Players> footySpaceOwner = footySpace.getPlayer().stream()
         .filter(player -> player.getResponsibility()
-          .equals(OWNER)).collect(Collectors.toList()).stream().findFirst();
+          .equals(OWNER)).findFirst();
 
       // vendo se algum jogador dono do usuário é o mesmo que o jogador dono do grupo
       boolean isOwner = footySpaceOwner.isPresent() ? ownersList.stream()
@@ -99,6 +100,7 @@ public class FootySpaceServiceIMP implements FootySpaceService {
 
       if (isOwner) {
         footySpaceRepository.deleteById(footySpaceId);
+        personRepository.deleteById(ownerId);
       } else {
         throw new OwnershipViolationException("Cannot delete, person is not the owner");
       }

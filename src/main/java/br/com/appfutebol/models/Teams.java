@@ -11,13 +11,8 @@ import java.util.UUID;
 import lombok.Data;
 
 @Data
-@Entity
-public class Teams extends AbstractModel {
+public class Teams {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
-  @OneToMany
   private List<Players> player = new ArrayList<>();
 
   private String name;

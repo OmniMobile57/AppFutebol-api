@@ -5,6 +5,7 @@ import static br.com.appfutebol.models.Responsibility.OWNER;
 import br.com.appfutebol.api.requests.PlayersRequest;
 import br.com.appfutebol.api.responses.PlayersResponse;
 import br.com.appfutebol.configs.log.AuditLog;
+import br.com.appfutebol.exceptions.InvalidResultSumException;
 import br.com.appfutebol.exceptions.NotEnoughPlayersException;
 import br.com.appfutebol.exceptions.OwnershipViolationException;
 import br.com.appfutebol.exceptions.ResourceNotFoundException;
@@ -85,40 +86,41 @@ public class PlayersServiceIMP implements PlayersService {
   }
 
   private void setResponsibility(PlayersRequest playersRequest, Players player) {
-    if (Objects.nonNull(playersRequest.getResponsibility())) {
-      if (playersRequest.getResponsibility().equals(OWNER)) {
-        throw new OwnershipViolationException(
-          "It is not possible to have two owners in a footy space");
-      }
-      player.setResponsibility(playersRequest.getResponsibility());
+    if (playersRequest.getResponsibility().equals(OWNER)) {
+      throw new OwnershipViolationException(
+        "It is not possible to have two owners in a footy space");
     }
+    player.setResponsibility(playersRequest.getResponsibility());
   }
 
   private List<PlayersResponse> setGamesPlayed(List<PlayersRequest> playersRequest) {
     if (playersRequest.isEmpty()) {
       throw new NotEnoughPlayersException("Unable to update players. List is empty");
     }
-    List<Players> playersList = playersRequest.stream().map(playerRequest -> {
-      Players player = playersRepository.findById(playerRequest.getId())
-        .orElseThrow(() -> new ResourceNotFoundException("No such player with id: %s", playerRequest.getId()));
+    List<Players> playersList = playersRepository.findAllById(
+      playersRequest.stream().map(p -> p.getId()).collect(Collectors.toList()));
 
-      int games = playerRequest.getGamesPlayed().getGames();
-      int defeat = playerRequest.getGamesPlayed().getDefeat();
-      int goals = playerRequest.getGamesPlayed().getGoals();
-      int draw = playerRequest.getGamesPlayed().getDraw();
-      int victories = playerRequest.getGamesPlayed().getVictories();
+    for (int i = 0; i < playersList.size(); i++) {
 
-      player.getGamesPlayed().setGames(games);
-      player.getGamesPlayed().setDraw(draw);
-      player.getGamesPlayed().setDefeat(defeat);
-      player.getGamesPlayed().setGoals(goals);
-      player.getGamesPlayed().setVictories(victories);
+      int games = playersRequest.get(i).getGamesPlayed().getGames();
+      int defeat = playersRequest.get(i).getGamesPlayed().getDefeat();
+      int goals = playersRequest.get(i).getGamesPlayed().getGoals();
+      int draw = playersRequest.get(i).getGamesPlayed().getDraw();
+      int victories = playersRequest.get(i).getGamesPlayed().getVictories();
 
-      player.setScore();
-      return playersRepository.save(player);
-    }).collect(Collectors.toList());
-    return mapper.toPlayerResponseList(playersList);
+      if (games != (defeat + draw + victories)) {
+        throw new InvalidResultSumException(
+          "The sum of 'victories', 'draws' and 'defeats' must be the amount of 'games'");
+      }
+      playersList.get(i).getGamesPlayed().setGames(games);
+      playersList.get(i).getGamesPlayed().setDraw(draw);
+      playersList.get(i).getGamesPlayed().setDefeat(defeat);
+      playersList.get(i).getGamesPlayed().setGoals(goals);
+      playersList.get(i).getGamesPlayed().setVictories(victories);
+
+      playersList.get(i).setScore();
+    }
+    return mapper.toPlayerResponseList(playersRepository.saveAll(playersList));
   }
-
 
 }

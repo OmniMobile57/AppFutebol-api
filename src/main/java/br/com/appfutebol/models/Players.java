@@ -22,15 +22,18 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Players extends AbstractModel {
 
+  private static final Double VICTORY_WEIGHT = 3D;
+  private static final Double DRAW_WEIGHT = 1D;
+  private static final Double GOAL_WEIGHT = 1D;
+  private static final Double MAX_SCORE = 5D;
+  private static final Double MIN_SCORE = 0D;
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
   private String name;
   @Embedded
   private GamesPlayed gamesPlayed = new GamesPlayed();
-  private Double score = 0.0;
-  //  @Enumerated(EnumType.STRING)
-  //  private Position position;
+  private Double score = 0D;
   @Enumerated(EnumType.STRING)
   private Responsibility responsibility = Responsibility.COMMON;
   @ManyToOne
@@ -40,17 +43,20 @@ public class Players extends AbstractModel {
   private Person person;
 
   public void setScore() {
-    double maxPointsActual = this.score * this.gamesPlayed.getGames();
-    double victoryScore = this.gamesPlayed.getVictories();
-    double drawScore = this.gamesPlayed.getDraw();
-    double goalScore = this.gamesPlayed.getGoals();
-
-    double newMaxPoints = maxPointsActual + victoryScore + drawScore + goalScore;
     DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
-    double newScore = Double.valueOf(decimalFormat.format(newMaxPoints / this.gamesPlayed.getGames()).replace(",", "."));
-    this.setScore(newScore);
+    int victories = this.gamesPlayed.getVictories();
+    int draw = this.gamesPlayed.getDraw();
+    int goals = this.gamesPlayed.getGoals();
+    int games = this.gamesPlayed.getGames();
 
+    double victoryRatio = Double.valueOf(decimalFormat.format((double) victories / games).replace(",", "."));
+    double drawRatio = Double.valueOf(decimalFormat.format((double) draw / games).replace(",", "."));
+    double goalRatio = Double.valueOf(decimalFormat.format((double) goals / games).replace(",", "."));
+
+    double score = (victoryRatio * VICTORY_WEIGHT) + (drawRatio * DRAW_WEIGHT) + (goalRatio * GOAL_WEIGHT);
+
+    this.score = Math.min(MAX_SCORE, Math.max(MIN_SCORE, score));
   }
 
 }

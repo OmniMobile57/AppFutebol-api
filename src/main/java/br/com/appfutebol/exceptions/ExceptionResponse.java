@@ -1,5 +1,8 @@
 package br.com.appfutebol.exceptions;
 
+import static br.com.appfutebol.util.Utils.getTimeFormatted;
+
+import br.com.appfutebol.util.Utils;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,9 +26,7 @@ public class ExceptionResponse implements Serializable {
   private String message;
   private String details;
 
-  public String getTime() {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")
-      .withZone(ZoneId.of("America/Sao_Paulo"));
-    return formatter.format(LocalDateTime.now());
+  private String getTime() {
+    return getTimeFormatted(LocalDateTime.now());
   }
 }

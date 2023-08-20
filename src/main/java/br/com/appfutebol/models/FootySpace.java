@@ -21,8 +21,6 @@ public class FootySpace extends AbstractModel {
   private UUID id;
   private String name;
 
-//  @OneToMany
-//  List<Matches> match;
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "footySpace")
   List<Players> player = new ArrayList<>();
 
